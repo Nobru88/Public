@@ -1,26 +1,28 @@
 const myModal = new bootstrap.Modal("#transaction-modal");
 let logged = sessionStorage.getItem("logged");
 const session = localStorage.getItem("session");
+
 let data = {
     transactions: []
 };
 
-checkLogged();
+document.getElementById("button-logout").addEventListener("click", logout);
 
-document.getElementById("logout-button").addEventListener("click", logout);
 
-//ADICIONAR LANCAMENTO
-document.getElementById("transaction-form").addEventListener('submit', function(e) {
+//ADICIONAR LANÇAMENTO
+document.getElementById("transaction-form").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const value = parseFloat(document.getElementById('value-input').value);
-    const description = document.getElementById('description-input').value;
-    const date = document.getElementById('date-input').value;
+    const value = parseFloat(document.getElementById("value-input").value);
+    const description = document.getElementById("description-input").value;
+    const date = document.getElementById("date-input").value;
     const type = document.querySelector('input[name="type-input"]:checked').value;
 
     data.transactions.unshift({
         value: value, type: type, description: description, date: date
     });
+
+    alert("lançamento adicionado com sucesso!");
 
     saveData(data);
     e.target.reset();
@@ -28,9 +30,11 @@ document.getElementById("transaction-form").addEventListener('submit', function(
 
     getTransactions();
 
-    alert("Lançamento adicionado com sucesso.");
+    
 
 });
+
+checkLogged();
 
 function checkLogged() {
     if(session) {
@@ -39,7 +43,8 @@ function checkLogged() {
     }
 
     if(!logged) {
-        window.location.href = 'index.html';
+
+        window.location.href = "index.html";
         return;
     }
 
@@ -56,7 +61,7 @@ function logout() {
     sessionStorage.removeItem("logged");
     localStorage.removeItem("session");
 
-    window.location.href = 'index.html';
+    window.location.href = "index.html";
 }
 
 function getTransactions() {
@@ -64,27 +69,27 @@ function getTransactions() {
     let transactionsHtml = ``;
 
     if(transactions.length) {
-        transactions.forEach((item) =>  {
+        transactions.forEach((item) => {
             let type = "Entrada";
 
-            if(item.type === 2) {
+            if(item.type === "2") {
                 type = "Saída";
             }
 
             transactionsHtml += `
                 <tr>
                     <th scope="row">${item.date}</th>
-                    <td>${item.value.toFixed(2)}</td>
-                    <td>${type}</td>
-                    <td>${item.description}</td>
-                </tr>
-            `;
-        });
-
-        document.getElementById('transactions-list').innerHTML = transactionsHtml;
+                    <td>${item.value.toFixed(2)}</td>                           
+                    <td>${type}</td>                           
+                    <td>${item.description}</td>                         
+                </tr>                   
+            `                           
+        })
     }
+
+    document.getElementById("transactions-List").innerHTML = transactionsHtml;
 }
 
-function saveData(data) {
+function saveData(data){
     localStorage.setItem(data.login, JSON.stringify(data));
 }
